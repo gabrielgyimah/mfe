@@ -29,7 +29,9 @@ jobs:
           PRODUCTION_DOMAIN: ${{secrets.PRODUCTION_DOMAIN}}
 
       - name: List Build Output
-        run: ls -al dist
+        run:
+          echo "Listing build directory files"
+          ls -al dist
 
       - name: Debug Environment Variables
         run: |
