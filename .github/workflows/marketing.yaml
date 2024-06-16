@@ -1,24 +1,24 @@
-name: deploy-container
+name: deploy maketing app
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'packages/container/**'
-  workflow_dispatch: # This allows manual triggering
+      - 'packages/marketing/**'
+  workflow_dispatch: #
 
 defaults:
   run:
-    working-directory: packages/container
-
+    working-directory: packages/marketing
+  
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@master  # Updated to v3 for Node.js 20 support
+        uses: actions/checkout@master
 
       - name: Install dependencies
         run: npm install
@@ -48,14 +48,14 @@ jobs:
           aws-region: 'us-east-1' # Specify your region
 
       - name: Sync to S3
-        run: aws s3 sync dist/ s3://${{secrets.AWS_S3_BUCKET_NAME}}/container/latest
+        run: aws s3 sync dist/ s3://${{secrets.AWS_S3_BUCKET_NAME}}/marketing/latest
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
       - name: Invalidate existing files
-        run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/marketing/latest/index.html"
+        run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/marketing/latest/remoteEntry.js"
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-  
+
